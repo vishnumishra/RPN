@@ -49,7 +49,33 @@ void test_evaluate_eval_a_rpn_notation_5(){
 	assertEqual( result,120);	
 };
 
+void test_evaluate_eval_a_rpn_notation_6(){
+	int result;
+	char str[256] = "5 1 2 + 4 * + 3 -";
+	result = evaluate(str);
+	assertEqual( result,14);	
+};
 
+void test_evaluate_eval_a_rpn_notation_7(){
+	int result;
+	char str[256] = "2 2 2 * 2 - 3 + +";
+	result = evaluate(str);
+	assertEqual( result,7);	
+};
+
+void test_evaluate_eval_a_rpn_notation_8(){
+	int result;
+	char str[256] = "2 2 2 2 2 * * 2 + + 2 - *";
+	result = evaluate(str);
+	assertEqual( result,20);	
+};
+
+void test_evaluate_eval_a_rpn_notation_9(){
+	int result;
+	char str[256] = "2 2 - 2 2 2 * 2 - - - ";
+	result = evaluate(str);
+	assertEqual( result,0);	
+};
 
 
 
