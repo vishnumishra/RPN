@@ -1,9 +1,9 @@
-struct result {
+// typedef struct staus Status;
+typedef struct status {
   int error;
-  int status;
-}Result;
+  int result;
+}Status;
 
-int evaluate(char *expression); 
-
+Status evaluate(char *expression); 
 
 

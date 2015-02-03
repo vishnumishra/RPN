@@ -6,76 +6,98 @@
 
 	
 void test_evaluate_eval_a_rpn_notation(){
-	int result;
 	char str[256] = "2 3 +";
-	result = evaluate(str);
-	assertEqual( result,5);	
+	Status status = evaluate(str);
+	assertEqual( status.result,5);	
 };
 
 void test_evaluate_eval_a_rpn_notation_1(){
-	int result;
+	
 	char str[256] = "2 3 -";
-	result = evaluate(str);
-	assertEqual( result,-1);	
+	Status status = evaluate(str);
+	assertEqual( status.result,-1);	
 };
 
 void test_evaluate_eval_a_rpn_notation_2(){
-	int result;
+	
 	char str[256] = "2 3 *";
-	result = evaluate(str);
-	assertEqual( result,6);	
+	Status status = evaluate(str);
+	assertEqual( status.result,6);	
 };
 
 
 void test_evaluate_eval_a_rpn_notation_3(){
-	int result;
+	
 	char str[256] = "2 3 /";
-	result = evaluate(str);
-	assertEqual( result,(2/3));	
+	Status status = evaluate(str);
+	assertEqual( status.result,(2/3));	
 };
 
 void test_evaluate_eval_a_rpn_notation_4(){
-	int result;
+	
 	char str[256] = "2 3 4 + -";
-	result = evaluate(str);
-	assertEqual( result,2-(3+4));	
+	Status status = evaluate(str);
+	assertEqual( status.result,2-(3+4));	
 };
 
 
 void test_evaluate_eval_a_rpn_notation_5(){
-	int result;
+	
 	char str[256] = "1 2 3 4 5 * * * * ";
-	result = evaluate(str);
-	assertEqual( result,120);	
+	Status status = evaluate(str);
+	assertEqual( status.result,120);	
 };
 
 void test_evaluate_eval_a_rpn_notation_6(){
-	int result;
+	
 	char str[256] = "5 1 2 + 4 * + 3 -";
-	result = evaluate(str);
-	assertEqual( result,14);	
+	Status status = evaluate(str);
+	assertEqual( status.result,14);	
 };
 
 void test_evaluate_eval_a_rpn_notation_7(){
-	int result;
+	
 	char str[256] = "2 2 2 * 2 - 3 + +";
-	result = evaluate(str);
-	assertEqual( result,7);	
+	Status status = evaluate(str);
+	assertEqual( status.result,7);	
 };
 
 void test_evaluate_eval_a_rpn_notation_8(){
-	int result;
+	
 	char str[256] = "2 2 2 2 2 * * 2 + + 2 - *";
-	result = evaluate(str);
-	assertEqual( result,20);	
+	Status status = evaluate(str);
+	assertEqual( status.result,20);	
 };
 
 void test_evaluate_eval_a_rpn_notation_9(){
-	int result;
+	
 	char str[256] = "2 2 - 2 2 2 * 2 - - - ";
-	result = evaluate(str);
-	assertEqual( result,0);	
+	Status status = evaluate(str);
+	assertEqual( status.result,0);	
 };
 
+void test_evaluate_eval_a_rpn_notation_10(){
+	char str[256] = "2 4 + +";
+	Status status = evaluate(str);
+	assertEqual(status.error,'+');	
+};
+
+void test_evaluate_eval_a_rpn_notation_11(){
+	char str[256] = "2 4 + /";
+	Status status = evaluate(str);
+	assertEqual(status.error,'/');	
+};
+
+void test_evaluate_eval_a_rpn_notation_12(){
+	char str[256] = "2 4 3 +";
+	Status status = evaluate(str);
+	assertEqual(status.error,1);	
+};
+
+void test_evaluate_eval_a_rpn_notation_13(){
+	char str[256] = "2 4 3 + + -";
+	Status status = evaluate(str);
+	assertEqual(status.error,'-');	
+};
 
 

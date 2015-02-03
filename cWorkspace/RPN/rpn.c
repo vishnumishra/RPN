@@ -21,22 +21,29 @@ int performOperation(int num1,int num2,char operator){
 	return result;
 };
 
-int evaluate(char *expression){
-	int i,result,length = strlen(expression),*a ,num1,num2;
+Status evaluate(char *exp){
+	int i,length = strlen(exp),*a ,error;
+	void * num1,*num2;
+	Status status;
 	Stack s = createStack();
 	for(i=0;i<length;i++){
 		a = malloc(sizeof(int));
-		if(expression[i] >=48 && expression[i] <= 57 ){
-			*a = (expression[i] -'0');
+		if(exp[i] >=48 && exp[i] <= 57 ){
+			*a = (exp[i] -'0');
 			push(s,(void*)a);
-		};
-		if(expression[i] >='*' && expression[i] <= '/'){
-			num2 = 	*(int*)(pop(s));
-			num1 =  *(int*)(pop(s));
-			result = performOperation(num1,num2,expression[i]);
-			push(s,&result);
-		};
-	}
+		}
+		if(exp[i] >='*' && exp[i] <= '/'){
+			num2 = 	(pop(s));
+			num1 =  (pop(s));
+			if(num1 == NULL || num2 == NULL) error = exp[i];
+			else{
+				status.result = performOperation(*(int*)num1,*(int*)num2,exp[i]);
+				push(s,&(status.result));
+			}
+		}
+		if(s.list->count > 1  )error = 1;
+	};
+	status.error = error;
 	free(a);
-	return result ;
+	return status ;
 };
