@@ -116,7 +116,6 @@ Status *evaluate(char *exp){
 		data = *(Token*)getElementAt(list, i);
 		perform(data,s,exp,status);
 	};
-	// printf("result in eval %d\n",status.result );
 	return status;
 };
 

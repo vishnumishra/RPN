@@ -14,3 +14,6 @@ typedef struct token{
 Status* evaluate(char *expression); 
 int getEnd(int i,int cs, char* exp);
 int getType(char a);
+LinkedList getTokenList(char* exp);
+
+

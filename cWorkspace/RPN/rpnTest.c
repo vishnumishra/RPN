@@ -163,6 +163,23 @@ void test_getEnd_give_the_end_of_a_type_5(){
 	assertEqual(getEnd( 5,2,exp), 5) ;
 }
 
+void test_getTockenList_give_the_list_of_token(){
+	char* exp = "23 4 + - 3 * 5";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)(list.head)->data;
+	assertEqual(t.start_at, 0);
+	assertEqual(t.end_at, 1);
+};
+
+void test_getTockenList_give_the_list_of_token_1(){
+	char* exp = "2366+ 4 + - 3 * 5";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)(list.head)->data;
+	assertEqual(t.start_at, 0);
+	assertEqual(t.end_at, 3);
+};
+
+
 void test_Pseudo_test_evaluate(){
 	char* exp  = "2415 23 +";
 	evaluate(exp);
