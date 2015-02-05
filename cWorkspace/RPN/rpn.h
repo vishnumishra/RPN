@@ -11,6 +11,6 @@ typedef struct token{
 	int type;// 1 = operator, 2=operand, 3 = seprator,4=null;
 }Token;
 
-int evaluate(char *expression); 
+Status* evaluate(char *expression); 
 int getEnd(int i,int cs, char* exp);
 int getType(char a);

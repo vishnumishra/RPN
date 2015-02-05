@@ -77,45 +77,46 @@ LinkedList getTokenList(char* exp){
 	return list;
 };
 
-int handleOperand(Token t,Stack* s,char* exp){
+void handleOperand(Token t,Stack* s,char* exp,Status *status){
 	int *digit,result,size = t.end_at - t.start_at +1;
 	char* str = malloc(size);
 	digit = malloc(sizeof(int));
 	memcpy(str,&exp[t.start_at],size);
 	*digit = atoi(str);
 	result = push(*s,(void*)digit);
-	return (result)?1:-2;
+	(result > 2 ) ? (status->error = -2) : (status->error = 0);
 };
 
-int handleOperator(Token t,Stack* s,char* exp){
+void handleOperator(Token t,Stack* s,char* exp,Status *status){
 	int *numRef1,*numRef2;
 	int* result = malloc(sizeof(int));
-	char operand = exp[t.start_at];
 	numRef2 = pop(*s);
 	numRef1 = pop(*s);
-	if(numRef2 == 0 || numRef1 == 0 ) return -1;
-	*result = performOperation(*(int*)numRef1,*(int*)numRef2,exp[t.start_at]);
-	push(*s,result );
-	return *result;
+	if(numRef2 == 0 || numRef1 == 0 ) (status->error) = exp[t.start_at];
+	else{
+		*result = performOperation(*(int*)numRef1,*(int*)numRef2,exp[t.start_at]);
+		push(*s,result );
+		status->result = *result;
+	}
 }
 
-int perform(Token t,Stack *s,char* exp){
-	int result;
-	if(t.type==2) result = handleOperand(t,s,exp);
-	if(t.type==1) result = handleOperator(t,s,exp);
-	return result; // -2 toFew operand -1 to many operator;
+void perform(Token t,Stack *s,char* exp,Status *status){
+	if(t.type==2)  handleOperand(t,s,exp,status);
+	if(t.type==1)  handleOperator(t,s,exp,status);
 };
 
-int evaluate(char *exp){
+Status *evaluate(char *exp){
 	LinkedList list = getTokenList(exp);
 	Token data;
-	int i,result;
+	int i;
+	Status* status = malloc(sizeof(Status));
 	Stack *s = malloc(sizeof(Stack));
 	*s = createStack();
 	for ( i = 0; i < list.count; ++i){
 		data = *(Token*)getElementAt(list, i);
-		result = perform(data,s,exp);
+		perform(data,s,exp,status);
 	};
-	return result;
+	// printf("result in eval %d\n",status.result );
+	return status;
 };
 
