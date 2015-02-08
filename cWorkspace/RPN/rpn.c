@@ -26,7 +26,11 @@ int isDigit(char a){
 };
 
 int isOperator(char a){
-	return (a >= '*' && a <= '/');
+	char* operator = "^*/+-)(";int i;
+	for(i=0;i<strlen(operator);i++){
+		if(operator[i]==a)return 1;
+	}
+	return 0;
 }
 
 int isSeprator(char a){
@@ -54,11 +58,11 @@ Token *createToken(){
 	return newTocken;
 }
 
-void showData(void* t){
+void showTokenData(void* t){
 	Token toc = *(Token*)t;
-	printf("list data start  %d\n",toc.start_at);
-	printf("%d\n",toc.end_at);
-	printf("type %d\n",toc.type);
+	printf("token start_at:  %d | ",toc.start_at);
+	printf("token end_at: %d | ",toc.end_at);
+	printf("type of token: %d\n",toc.type);
 };
 
 LinkedList getTokenList(char* exp){
@@ -70,7 +74,9 @@ LinkedList getTokenList(char* exp){
 		t = createToken();
 		t->type = cs;
 		t->start_at = i;
-		t->end_at = getEnd(i,cs,exp);
+		if (cs == 1) t->end_at = i;
+		else
+			t->end_at = getEnd(i,cs,exp);
 		i=t->end_at+1;
 		add_to_list(&list,create_node(t));
 	};
@@ -78,18 +84,14 @@ LinkedList getTokenList(char* exp){
 };
 
 void handleOperand(Token t,Stack* s,char* exp,Status *status){
-	int *digit,result,size = t.end_at - t.start_at +1;
-	char* str = malloc(size);
-	digit = malloc(sizeof(int));
-	memcpy(str,&exp[t.start_at],size);
-	*digit = atoi(str);
+	int *digit=malloc(sizeof(int)),result;
+	*digit = atoi(&exp[t.start_at]);
 	result = push(*s,(void*)digit);
 	(result > 2 ) ? (status->error = -2) : (status->error = 0);
 };
 
 void handleOperator(Token t,Stack* s,char* exp,Status *status){
-	int *numRef1,*numRef2;
-	int* result = malloc(sizeof(int));
+	int *numRef1,*numRef2,*result = malloc(sizeof(int));
 	numRef2 = pop(*s);
 	numRef1 = pop(*s);
 	if(numRef2 == 0 || numRef1 == 0 ) (status->error) = exp[t.start_at];
@@ -98,9 +100,9 @@ void handleOperator(Token t,Stack* s,char* exp,Status *status){
 		push(*s,result );
 		status->result = *result;
 	}
-}
+};
 
-void perform(Token t,Stack *s,char* exp,Status *status){
+void controlOperation(Token t,Stack *s,char* exp,Status *status){
 	if(t.type==2)  handleOperand(t,s,exp,status);
 	if(t.type==1)  handleOperator(t,s,exp,status);
 };
@@ -114,8 +116,62 @@ Status *evaluate(char *exp){
 	*s = createStack();
 	for ( i = 0; i < list.count; ++i){
 		data = *(Token*)getElementAt(list, i);
-		perform(data,s,exp,status);
+		controlOperation(data,s,exp,status);
 	};
+	free(s);
 	return status;
 };
+
+int getPrecedence(char smbl){
+	switch(smbl){
+		case '(' :case ')' : return 1;
+		case '-' :case '+' : return 2;
+		case '*' :case '%' : return 3;
+		case '^' : return 4;
+	};
+	return 0;
+};
+
+void handleInfixOperand(Token t,Queue* q,char* exp,Status *status){
+int *digit,result,size = t.end_at - t.start_at +1;
+	char* str = malloc(size);
+	digit = malloc(sizeof(int));
+	memcpy(str,&exp[t.start_at],size);
+	result = enqueue (*q, str);
+	// (result > 2 ) ? (status->error = -2) : (status->error = 0);
+};
+
+void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status){
+	int *numRef1,*numRef2,*result = malloc(sizeof(int));
+	int precedence= getPrecedence(exp[t.start_at]);
+	// if()
+};
+
+void controlInfixOperation(Token t,Stack *s,Queue *q,char* exp,Status *status){
+	if(t.type==2)  handleInfixOperand(t,q,exp,status);
+	if(t.type==1)  handleInfixOperator(t,s,q,exp,status);
+};
+
+
+char * infixToPostfix(char * exp){
+	char* string ;
+	LinkedList list = getTokenList(exp);
+	Token data;
+	int i;
+	Status* status = malloc(sizeof(Status));
+	Stack *s = malloc(sizeof(Stack));
+	Queue *q = malloc(sizeof(Queue));
+	*q = createQueue();
+	*s = createStack();
+	for ( i = 0; i < list.count; ++i){
+		data = *(Token*)getElementAt(list, i);
+		controlInfixOperation(data,s,q,exp,status);
+	};
+ 	free(s);
+	return string;
+};
+
+
+
+
 

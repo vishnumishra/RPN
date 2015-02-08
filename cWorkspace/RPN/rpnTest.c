@@ -179,11 +179,128 @@ void test_getTockenList_give_the_list_of_token_1(){
 	assertEqual(t.end_at, 3);
 };
 
+void test_getTockenList_give_the_list_of_token_2(){
+	char* exp = "2366 + 4 + - 3 * 5";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)getElementAt(list,2);
+	assertEqual(t.start_at, 5);
+	assertEqual(t.end_at, 5);
+};
+void test_getTockenList_give_the_list_of_token_3(){
+	char* exp = "2366 ++++ 4 + - 3 * 5";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)getElementAt(list,2);
+	assertEqual(t.start_at, 5);
+	assertEqual(t.end_at, 5);
+};
+void test_getTockenList_give_the_list_of_token_4(){
+	char* exp = "2366 ++++ 4 + - 3 * 5";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)getElementAt(list,3);
+	assertEqual(t.start_at, 6);
+	assertEqual(t.end_at, 6);
+};
+
+void test_getTockenList_give_the_list_of_token_5(){
+	char* exp = "2366 ++++ 4 + - 3 * 420";
+	LinkedList list =  getTokenList(exp);
+	Token t = *(Token*)getElementAt(list,17);
+	assertEqual(t.start_at, 20);
+	assertEqual(t.end_at, 22);
+	assertEqual(t.type, 2);
+};
+
+void test_is_digit_tell_the_string_is_digit_or_not(){
+	assertEqual(isDigit('2'),1);
+};
+void test_is_digit_tell_the_string_is_digit_or_not_1(){
+	assertEqual(isDigit('*'),0);
+};
+void test_is_digit_tell_the_string_is_digit_or_not_2(){
+	assertEqual(isDigit('g'),0);
+};
 
 void test_Pseudo_test_evaluate(){
 	char* exp  = "2415 23 +";
 	evaluate(exp);
 }
+
+void test_isOperator_tell_the_given_char_is_operator_or_not(){
+	assertEqual(isOperator('+'),1);
+};
+
+void test_isOperator_tell_the_given_char_is_operator_or_not_2(){
+	assertEqual(isOperator('^'),1);
+};
+
+void test_isOperator_tell_the_given_char_is_operator_or_not_3(){
+	assertEqual(isOperator('a'),0);
+};
+
+void test_isOperator_tell_the_given_char_is_operator_or_not_4(){
+	assertEqual(isOperator('@'),0);
+};
+
+void test_isOperator_tell_the_given_char_is_operator_or_not_5(){
+	assertEqual(isOperator('1'),0);
+};
+
+void test_isOperator_tell_the_given_char_is_operator_or_not_6(){
+	assertEqual(isOperator('$'),0);
+};
+
+void test_infix_to_postFix_convert_exp(){
+	char* infix = "3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3",*result;
+	char* postfix = "3 4 2 * 1 5 - 2 3 ^ ^ / +";
+	result = infixToPostfix(infix);
+	assertEqual(strcmp(postfix,result),0);
+};
+
+void test_getPrecedence_give_the_pricedence_of_the_operator(){
+	int result = getPrecedence('+');
+	assertEqual(result,2);
+}
+void test_getPrecedence_give_the_pricedence_of_the_operator_1(){
+	int result = getPrecedence('*');
+	assertEqual(result,3);
+}
+void test_getPrecedence_give_the_pricedence_of_the_operator_2(){
+	int result = getPrecedence('^');
+	assertEqual(result,4);
+}
+void test_getPrecedence_give_the_pricedence_of_the_operator_3(){
+	int result = getPrecedence('(');
+	assertEqual(result,1);
+}
+
+void test_getPrecedence_give_the_pricedence_of_the_operator_4(){
+	int result = getPrecedence('-');
+	assertEqual(result,2);
+}
+
+void test_handleInfixOperand_enque_the_operand_into_queue_1(){
+	Token t={1,2,2};char* exp = "23 + 5",t1;
+	node_ptr* n;
+	Queue q = createQueue();
+	Status* s  = malloc(sizeof(Status));
+	handleInfixOperand(t,&q,exp,s);
+	// n = q.start; 
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

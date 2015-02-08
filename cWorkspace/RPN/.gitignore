@@ -2,3 +2,4 @@
 *.o
 *TestRunner.c
 *.exe.*
+expr_assert.h
