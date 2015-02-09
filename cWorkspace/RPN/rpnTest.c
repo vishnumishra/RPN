@@ -303,11 +303,6 @@ void test_isStackEmpty_tell_that_stack_is_empty_or_not(){
 	assertEqual(isStackEmpty(&s),1);
 };
 
-// void showQueueData(void*d){
-// 	char* data = d;
-// 	printf("%s\n",d );
-// };
-
 void test_handleInfixOperator_enque_the_operand_into_queue_2(){
 	char* exp = "2 + 5",*data,*data1;
 	LinkedList list=getTokenList(exp);
@@ -333,6 +328,12 @@ void test_handleInfixOperator_enque_the_operand_into_queue_2(){
 void test_handleInfixOperator_enque_the_operand_into_queue_3(){
 	char exp[20] = "7 + ( 9 * 2 )";
 	char result[20] = "7 9 2 * + ";
+	char* string =  infixToPostfix(exp);
+	assertEqual(strcmp(result,string),0);
+};
+void test_handleInfixOperator_enque_the_operand_into_queue_4(){
+	char exp[20] = "7 * ( 9 + 2 )";
+	char result[20] = "7 9 2 + * ";
 	char* string =  infixToPostfix(exp);
 	assertEqual(strcmp(result,string),0);
 };
@@ -372,15 +373,6 @@ void test_create_string_from_queue_create_the_string(){
 	result = create_string_from_queue(q);
 	assertEqual(strcmp(result,"7 9 - "), 0);
 };
-
-
-
-
-
-
-
-
-
 
 
 
