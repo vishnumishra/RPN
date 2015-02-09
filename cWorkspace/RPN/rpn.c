@@ -149,7 +149,7 @@ void handleInfixOperand(Token t,Queue* q,char* exp,Status *status){
 int pushOperator(Stack s,void* data){
 	char* op=calloc(sizeof(char),1);
 	memcpy(op,data,sizeof(char));
-	printf("push data is : %s\n",op );
+	// printf("push data is : %s\n",op );
 	return push(s,op);
 };
 void showQueueData(void*d){
@@ -178,7 +178,8 @@ void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status){
 		while(getTop(s) != '('){
 			enqueue(*q,pop(*s));
 		}
-		printf("pop is: %c\n", *(int*)pop(*s)); 
+		pop(*s);
+		// printf("pop is: %c\n", *(int*)pop(*s)); 
 	}
 };
 
@@ -217,7 +218,7 @@ char * infixToPostfix(char * exp){
 	while(!isStackEmpty(s)){
 		enqueue(*q,pop(*s));
 	};
-	traverse(*q->list,showQueueData);
+	// traverse(*q->list,showQueueData);
  	free(s);
 	return create_string_from_queue(q);
 };
