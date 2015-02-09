@@ -279,13 +279,100 @@ void test_getPrecedence_give_the_pricedence_of_the_operator_4(){
 }
 
 void test_handleInfixOperand_enque_the_operand_into_queue_1(){
-	Token t={1,2,2};char* exp = "23 + 5",t1;
-	node_ptr* n;
+	Token t={0,1,2},t1={5,5,2};
+	char* exp = "23 + 5",*data,*data1;
 	Queue q = createQueue();
 	Status* s  = malloc(sizeof(Status));
 	handleInfixOperand(t,&q,exp,s);
-	// n = q.start; 
+	handleInfixOperand(t1,&q,exp,s);
+	data = (char*)((*(q.head))->data);
+	data1 = (char*)((*(q.tail))->data);
+	assertEqual(strcmp(data,"5"),0);
+	assertEqual(strcmp(data1,"23"),0);
+	free(s);
 };
+
+void test_isStackEmpty_tell_that_stack_is_empty_or_not(){
+	Stack s=createStack();
+	int data[]={2,33,43};
+	assertEqual(isStackEmpty(&s),1);
+	push(s,&data[0]);
+	push(s,&data[1]);
+	assertEqual(isStackEmpty(&s),0);
+	pop(s);pop(s);
+	assertEqual(isStackEmpty(&s),1);
+};
+
+// void showQueueData(void*d){
+// 	char* data = d;
+// 	printf("%s\n",d );
+// };
+
+void test_handleInfixOperator_enque_the_operand_into_queue_2(){
+	char* exp = "2 + 5",*data,*data1;
+	LinkedList list=getTokenList(exp);
+	Token t = *(Token*)getElementAt(list, 4);
+	Token t1 = *(Token*)getElementAt(list, 2);
+	Stack *stack = calloc(sizeof(stack),1);
+	Queue q = createQueue();
+	Status* s  = calloc(sizeof(Status),1);
+	*stack = createStack();
+	
+	handleInfixOperand(*(Token*)(*list.head).data,&q,exp,s);
+	handleInfixOperand(t,&q,exp,s);
+
+	handleInfixOperator(t1,stack,&q,exp,s);
+	data = (char*)((*(q.head))->data);
+	data1 = (char*)((*(q.tail))->data);
+
+	assertEqual(strcmp(data1,"2"),0);
+	assertEqual(strcmp(data,"5"),0);
+	free(stack);free(s);
+};
+
+void test_handleInfixOperator_enque_the_operand_into_queue_3(){
+	char exp[20] = "7 + ( 9 * 2 )";
+	char result[20] = "7 9 2 * + ";
+	char* string =  infixToPostfix(exp);
+	assertEqual(strcmp(result,string),0);
+};
+
+void test_isHigherOrEqualPricedence_tell_that_theCurrent_operator_pricedence_is_higher_or_not_1(){
+	char* data = "*+/-";
+	Stack *s=malloc(sizeof(Stack));
+	*s = createStack();
+	push(*s, &data[0]);
+	assertEqual(isHigherOrEqualPricedence(s,'/'), 1);
+}
+void test_isHigherOrEqualPricedence_tell_that_theCurrent_operator_pricedence_is_higher_or_not_2(){
+	char* data = "*+/-^";
+	Stack *s=malloc(sizeof(Stack));
+	*s = createStack();
+	push(*s, &data[0]);
+	assertEqual(isHigherOrEqualPricedence(s,'-'), 0);
+}
+
+void test_isHigherOrEqualPricedence_tell_that_theCurrent_operator_pricedence_is_higher_or_not_3(){
+	char* data = "*+/-^";
+	Stack *s=malloc(sizeof(Stack));
+	*s = createStack();
+	push(*s, &data[0]);
+	assertEqual(isHigherOrEqualPricedence(s,'^'), 1);
+}
+
+void test_create_string_from_queue_create_the_string(){
+	Queue *q=calloc(sizeof(Queue),1);
+	char *str = calloc(sizeof(char*),2);
+	char *result = calloc(sizeof(char*),8);
+	str = "7\09\0-\0";
+	*q=createQueue();
+	enqueue(*q,&str[0]);
+	enqueue(*q,&str[2]);
+	enqueue(*q,&str[4]);
+	result = create_string_from_queue(q);
+	assertEqual(strcmp(result,"7 9 - "), 0);
+};
+
 
 
 

@@ -23,4 +23,13 @@ void handleOperand(Token t,Stack* s,char* exp,Status *status);
 char * infixToPostfix(char * expression);
 int getPrecedence(char smbl);
 void handleInfixOperand(Token t,Queue* q,char* exp,Status *status);
+int isStackEmpty(Stack *s);
+void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status);
+void showTokenData(void* t);
+int isHigherOrEqualPricedence(Stack *s,char op);
+char* create_string_from_queue(Queue *q);
+void showQueueData(void*d);
+
+
+
 

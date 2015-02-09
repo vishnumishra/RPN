@@ -121,30 +121,78 @@ Status *evaluate(char *exp){
 	free(s);
 	return status;
 };
+//---------------------------------------------------------v.4---------------------------------------------------------------------------
 
 int getPrecedence(char smbl){
 	switch(smbl){
-		case '(' :case ')' : return 1;
+		case '(' : return 1;
 		case '-' :case '+' : return 2;
-		case '*' :case '%' : return 3;
+		case '*' :case '/' : return 3;
 		case '^' : return 4;
 	};
 	return 0;
 };
 
+int isStackEmpty(Stack *s){
+	return (*(s->top))==NULL;
+};
+char getTop(Stack *s){
+	return (*s->top !=0)?*(char*)(*s->top)->data:-1;
+};
 void handleInfixOperand(Token t,Queue* q,char* exp,Status *status){
-int *digit,result,size = t.end_at - t.start_at +1;
-	char* str = malloc(size);
-	digit = malloc(sizeof(int));
-	memcpy(str,&exp[t.start_at],size);
+	int result,size = t.end_at - t.start_at +1;
+	char* str = calloc(1,size);
+	memcpy(str,&(exp[t.start_at]),size);
 	result = enqueue (*q, str);
-	// (result > 2 ) ? (status->error = -2) : (status->error = 0);
+	(result > 2 ) ? (status->error = -2) : (status->error = 0);
+};
+int pushOperator(Stack s,void* data){
+	char* op=calloc(sizeof(char),1);
+	memcpy(op,data,sizeof(char));
+	printf("push data is : %s\n",op );
+	return push(s,op);
+};
+void showQueueData(void*d){
+	printf("%s\n",d );
 };
 
+int isHigherOrEqualPricedence(Stack *s,char op){
+
+	int prevPricedence = isStackEmpty(s)?0:getPrecedence(getTop(s));
+	int currentPrecedence = getPrecedence(op);
+	return prevPricedence <= currentPrecedence;
+}
+int isParentheses(char ch){
+	return (ch=='('||ch==')');
+}
+
 void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status){
-	int *numRef1,*numRef2,*result = malloc(sizeof(int));
-	int precedence= getPrecedence(exp[t.start_at]);
-	// if()
+	if(isStackEmpty(s)||isHigherOrEqualPricedence(s,exp[t.start_at]) || exp[t.start_at] =='('){
+		pushOperator(*s,&exp[t.start_at]);
+	}
+	while(!isStackEmpty(s) && !isParentheses(exp[t.start_at]) && !isHigherOrEqualPricedence(s,exp[t.start_at])){
+		enqueue(*q,pop(*s));
+		pushOperator(*s,&exp[t.start_at]);
+	}
+	if(exp[t.start_at] ==')'){
+		while(getTop(s) != '('){
+			enqueue(*q,pop(*s));
+		}
+		printf("pop is: %c\n", *(int*)pop(*s)); 
+	}
+};
+
+char* create_string_from_queue(Queue*q){
+	char* str = calloc(sizeof(char*),20);
+	char *data,i=0;
+	while((*q->head) != 0){
+		data = dequeue(*q);
+		str[i] = data[0];
+		i++;
+		str[i] = ' ';
+		i++;
+	}
+	return str;
 };
 
 void controlInfixOperation(Token t,Stack *s,Queue *q,char* exp,Status *status){
@@ -154,21 +202,24 @@ void controlInfixOperation(Token t,Stack *s,Queue *q,char* exp,Status *status){
 
 
 char * infixToPostfix(char * exp){
-	char* string ;
 	LinkedList list = getTokenList(exp);
 	Token data;
 	int i;
-	Status* status = malloc(sizeof(Status));
-	Stack *s = malloc(sizeof(Stack));
-	Queue *q = malloc(sizeof(Queue));
+	Status* status = calloc(sizeof(Status),1);
+	Stack *s = calloc(sizeof(Stack),1);
+	Queue *q = calloc(sizeof(Queue),1);
 	*q = createQueue();
 	*s = createStack();
 	for ( i = 0; i < list.count; ++i){
 		data = *(Token*)getElementAt(list, i);
 		controlInfixOperation(data,s,q,exp,status);
 	};
+	while(!isStackEmpty(s)){
+		enqueue(*q,pop(*s));
+	};
+	traverse(*q->list,showQueueData);
  	free(s);
-	return string;
+	return create_string_from_queue(q);
 };
 
 
