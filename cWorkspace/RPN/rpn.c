@@ -149,7 +149,6 @@ void handleInfixOperand(Token t,Queue* q,char* exp,Status *status){
 int pushOperator(Stack s,void* data){
 	char* op=calloc(sizeof(char),1);
 	memcpy(op,data,sizeof(char));
-	// printf("push data is : %s\n",op );
 	return push(s,op);
 };
 void showQueueData(void*d){
@@ -157,16 +156,27 @@ void showQueueData(void*d){
 };
 
 int isHigherOrEqualPricedence(Stack *s,char op){
-
 	int prevPricedence = isStackEmpty(s)?0:getPrecedence(getTop(s));
 	int currentPrecedence = getPrecedence(op);
 	return prevPricedence <= currentPrecedence;
 }
+int isHigherPricedence(Stack *s,char op){
+	int prevPricedence = isStackEmpty(s)?0:getPrecedence(getTop(s));
+	int currentPrecedence = getPrecedence(op);
+	return prevPricedence < currentPrecedence;
+}
+int isEqualPricedence(Stack *s,char op){
+	int prevPricedence = isStackEmpty(s)?0:getPrecedence(getTop(s));
+	int currentPrecedence = getPrecedence(op);
+	return prevPricedence == currentPrecedence;
+}
+
 int isParentheses(char ch){
 	return (ch=='('||ch==')');
 }
 
 void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status){
+
 	if(isStackEmpty(s)||isHigherOrEqualPricedence(s,exp[t.start_at]) || exp[t.start_at] =='('){
 		pushOperator(*s,&exp[t.start_at]);
 	}
@@ -179,17 +189,18 @@ void handleInfixOperator(Token t,Stack* s,Queue* q,char* exp,Status *status){
 			enqueue(*q,pop(*s));
 		}
 		pop(*s);
-		// printf("pop is: %c\n", *(int*)pop(*s)); 
 	}
 };
 
 char* create_string_from_queue(Queue*q){
 	char* str = calloc(sizeof(char*),20);
-	char *data,i=0;
+	char *data;
+	int i=0,j,length;
 	while((*q->head) != 0){
 		data = dequeue(*q);
-		str[i] = data[0];
-		i++;
+		for(j=0;j<strlen(data);j++){
+		str[i++] = data[j];
+		}
 		str[i] = ' ';
 		i++;
 	}
@@ -218,7 +229,6 @@ char * infixToPostfix(char * exp){
 	while(!isStackEmpty(s)){
 		enqueue(*q,pop(*s));
 	};
-	// traverse(*q->list,showQueueData);
  	free(s);
 	return create_string_from_queue(q);
 };

@@ -250,12 +250,17 @@ void test_isOperator_tell_the_given_char_is_operator_or_not_6(){
 };
 
 void test_infix_to_postFix_convert_exp(){
-	char* infix = "3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3",*result;
-	char* postfix = "3 4 2 * 1 5 - 2 3 ^ ^ / +";
+	char* infix = "3 + 4 / ( 1 - 5 ) ^ 2 ^ 3",*result;
+	char* postfix = "3 4 1 5 - 2 3 ^ ^ / + ";
 	result = infixToPostfix(infix);
 	assertEqual(strcmp(postfix,result),0);
 };
-
+void test_infix_to_postFix_convert_exp_02(){
+	char* infix = "3+4/(1-5)^2^3",*result;
+	char* postfix = "3 4 1 5 - 2 3 ^ ^ / + ";
+	result = infixToPostfix(infix);
+	assertEqual(strcmp(postfix,result),0);
+};
 void test_getPrecedence_give_the_pricedence_of_the_operator(){
 	int result = getPrecedence('+');
 	assertEqual(result,2);
@@ -338,6 +343,13 @@ void test_handleInfixOperator_enque_the_operand_into_queue_4(){
 	assertEqual(strcmp(result,string),0);
 };
 
+void test_handleInfixOperator_enque_the_operand_into_queue_5(){
+	char exp[20] = "71 + 4 / 62";
+	char result[20] = "71 4 62 / + ";
+	char* string =  infixToPostfix(exp);
+	assertEqual(strcmp(result,string),0);
+};
+
 void test_isHigherOrEqualPricedence_tell_that_theCurrent_operator_pricedence_is_higher_or_not_1(){
 	char* data = "*+/-";
 	Stack *s=malloc(sizeof(Stack));
@@ -365,13 +377,13 @@ void test_create_string_from_queue_create_the_string(){
 	Queue *q=calloc(sizeof(Queue),1);
 	char *str = calloc(sizeof(char*),2);
 	char *result = calloc(sizeof(char*),8);
-	str = "7\09\0-\0";
+	str = "71\09\0-\0";
 	*q=createQueue();
 	enqueue(*q,&str[0]);
-	enqueue(*q,&str[2]);
-	enqueue(*q,&str[4]);
+	enqueue(*q,&str[3]);
+	enqueue(*q,&str[5]);
 	result = create_string_from_queue(q);
-	assertEqual(strcmp(result,"7 9 - "), 0);
+	assertEqual(strcmp(result,"71 9 - "), 0);
 };
 
 
